@@ -36,8 +36,15 @@ from bs4 import BeautifulSoup
 BASE = "https://www.carrefour.es"
 SITEMAP_INDEX = f"{BASE}/crs/cdn-static/sitemap-food/index.xml"
 HEADERS = {
-    # Identifícate: un User-Agent honesto es buena práctica de scraping ético.
-    "User-Agent": "SinGlutenSinLactosaBot/0.1 (+contacto: TU_EMAIL_AQUI; uso no comercial, respeta robots.txt)"
+    # Carrefour (Akamai u otra CDN anti-bot por delante) devuelve 403 a
+    # clientes que no parecen un navegador real, incluidas muchas IPs de
+    # datacenter (como las de GitHub Actions). Un User-Agent de navegador
+    # normal + cabeceras Accept habituales evita el bloqueo mas basico;
+    # si el bloqueo es por reputacion de IP (no solo por cabeceras), esto
+    # no bastara y hara falta otro host/IP (ver notas mas abajo).
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+    "Accept-Language": "es-ES,es;q=0.9",
 }
 RATE_LIMIT_SECONDS = 1.5  # margen prudente entre peticiones a fichas de producto
 KEYWORDS = ["sin-gluten", "sin-lactosa", "no-gluten"]
