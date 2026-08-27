@@ -1,0 +1,33 @@
+name: Scraper Carrefour (prueba manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: "Numero de productos a probar (dejar vacio = todos)"
+        required: false
+        default: "15"
+
+jobs:
+  scrape:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout del repositorio
+        uses: actions/checkout@v4
+
+      - name: Instalar Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Instalar dependencias
+        run: pip install -r requirements.txt
+
+      - name: Ejecutar scraper (modo prueba)
+        run: python scraper_carrefour.py --out productos_carrefour.json --limit ${{ github.event.inputs.limit }}
+
+      - name: Guardar resultado como artefacto descargable
+        uses: actions/upload-artifact@v4
+        with:
+          name: productos-carrefour
+          path: productos_carrefour.json
